@@ -4,6 +4,7 @@ import '../../models/restaurant_comment.dart';
 import '../theme.dart';
 import '../widgets/chip/restaurant_type_chip.dart';
 import 'restaurant_comments_form.dart';
+import '../widgets/chip/bonus_comment_form.dart';
 
 class RestaurantCommentsView extends StatefulWidget {
   const RestaurantCommentsView({
@@ -36,13 +37,43 @@ class _RestaurantCommentsViewState extends State<RestaurantCommentsView> {
           _buildCommentsList(),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.main, 
-        child: const Icon(Icons.add, color: Colors.white),
-        onPressed: _addComment,
-      ),
+      floatingActionButton: Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        FloatingActionButton(
+          heroTag: "normal",
+          onPressed: _addCommentNormal,
+          child: const Icon(Icons.list_alt),
+        ),
+        const SizedBox(height: 12),
+        FloatingActionButton(
+          heroTag: "bonus",
+          backgroundColor: Colors.purple,
+          onPressed: _addCommentBonus,
+          child: const Icon(Icons.star_border_purple500),
+        ),
+      ],
+    ),
     );
   }
+
+  void _addCommentNormal() async {
+  final Comment? comment = await showModalBottomSheet<Comment>(
+    context: context,
+    isScrollControlled: true,
+    builder: (_) => const CommentForm(), 
+  );
+  if (comment != null) setState(() => widget.restaurant.comments.add(comment));
+}
+
+void _addCommentBonus() async {
+  final Comment? comment = await showModalBottomSheet<Comment>(
+    context: context,
+    isScrollControlled: true,
+    builder: (_) => const BonusCommentForm(), 
+  );
+  if (comment != null) setState(() => widget.restaurant.comments.add(comment));
+}
 
   Widget _buildHeader() {
     return Container(
@@ -125,19 +156,5 @@ class _RestaurantCommentsViewState extends State<RestaurantCommentsView> {
         },
       ),
     );
-  }
-
-  void _addComment() async {
-    final Comment? comment = await showModalBottomSheet<Comment>(
-      context: context,
-      isScrollControlled: true,
-      builder: (_) => const CommentForm(), 
-    );
-
-    if (comment != null) {
-      setState(() {
-        widget.restaurant.comments.add(comment);
-      });
-    }
   }
 }

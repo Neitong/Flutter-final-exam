@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 
 import '../../models/restaurant_comment.dart';
-import '../widgets/chip/rating_stars.dart';
 
 class CommentForm extends StatefulWidget {
   const CommentForm({super.key});
@@ -27,22 +26,24 @@ class _CommentFormState extends State<CommentForm> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text(
-              "How was your dinner?",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            RatingStars(
-              rating: star,
+            DropdownButton<int>(
+              value: star,
+              items: List.generate(
+                6,
+                (index) => DropdownMenuItem(
+                  value: index,
+                  child: Text("$index stars"),
+                ),
+              ),
               onChanged: (value) {
                 setState(() {
-                  star = value;
+                  star = value!;
                 });
               },
             ),
 
             const SizedBox(height: 12),
+
             TextField(
               controller: feedbackController,
               decoration: InputDecoration(
@@ -50,9 +51,10 @@ class _CommentFormState extends State<CommentForm> {
                 errorText: errorMessage,
               ),
             ),
+
             const SizedBox(height: 16),
 
-
+            // 🔹 Submit button
             ElevatedButton(
               onPressed: _submit,
               child: const Text("COMMENT"),
@@ -70,8 +72,6 @@ class _CommentFormState extends State<CommentForm> {
       });
       return;
     }
-
-
 
     Navigator.pop(
       context,

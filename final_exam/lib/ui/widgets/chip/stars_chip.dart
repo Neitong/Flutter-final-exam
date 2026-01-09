@@ -12,7 +12,7 @@ class StarsChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Chip(
-      avatar: const Icon(Icons.star, size: 16),
+      avatar: const Icon(Icons.star, size: 16, color: Colors.amber),
       label: Text(star.toStringAsFixed(1)),
     );
   }
